@@ -22,6 +22,8 @@ PaniniCMS also has a plugin API, so you can create your own plugins for PaniniCM
 1. Download PaniniCMS from [CircleCI](https://circleci.com/gh/PaniniCMS/Panini) (you need to login @ CircleCI before downloading the artifacts!) or compile it from the source by using Maven
 2. Start PaniniCMS by using `java -Xmx128M -Xms128M -jar Panini.jar -f YourFrontendFolder -p YourPaniniCMSPort -w YourWebsiteUrlWithAnSlashAtTheEnd -m YourMongoDBDatabaseName
 `
-3. Have fun!
+3. Create your author account by using "createauthor username password"
+4. Login to your admin panel by using YourWebsiteUrl/admin
+5. Have fun!
 
 (Tip: Use Apache or nginx to redirect your users from port 80 to your PaniniCMS port!)
