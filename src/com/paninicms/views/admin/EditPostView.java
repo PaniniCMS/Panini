@@ -21,7 +21,7 @@ public class EditPostView {
 	public static Object render(RenderContext context, Author author) {
 		try {
 			context.contextVars().put("statusMessage", context.request().session().get("statusMessage").value(null));
-			PebbleTemplate template = Panini.getEngine().getTemplate("editpost.html");
+			PebbleTemplate template = Panini.getEngine().getTemplate("admin/editpost.html");
 			
 			Document document = Panini.getPostsCollection().find(Filters.eq("_id", new ObjectId(context.arguments()[3]))).first();
 			

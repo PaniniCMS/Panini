@@ -18,7 +18,7 @@ public class CreatePostView {
 	public static Object render(RenderContext context, Author author) {
 		try {
 			context.contextVars().put("statusMessage", context.request().session().get("statusMessage").value(null));
-			PebbleTemplate template = Panini.getEngine().getTemplate("createpost.html");
+			PebbleTemplate template = Panini.getEngine().getTemplate("admin/createpost.html");
 			
 			if (context.request().param("title").isSet()) {
 				Post post = new Post();

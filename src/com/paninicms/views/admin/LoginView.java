@@ -54,7 +54,7 @@ public class LoginView {
 					context.contextVars().put("statusMessage", "Login ou senha inválida!");
 				}
 			}
-			PebbleTemplate template = Panini.getEngine().getTemplate("login.html");
+			PebbleTemplate template = Panini.getEngine().getTemplate("admin/login.html");
 			
 			return template;
 		} catch (PebbleException e) {

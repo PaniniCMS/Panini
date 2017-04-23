@@ -22,7 +22,7 @@ public class AdminPanelView {
 			context.contextVars().put("posts", Panini.getAllPosts());
 			context.contextVars().put("statusMessage", context.request().param("reason").value(null));
 			
-			PebbleTemplate template = Panini.getEngine().getTemplate("panel.html");
+			PebbleTemplate template = Panini.getEngine().getTemplate("admin/panel.html");
 
 			return template;
 		} catch (PebbleException e) {
