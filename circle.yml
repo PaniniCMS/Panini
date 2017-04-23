@@ -1,0 +1,11 @@
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+    - mvn clean
+    - mvn package
+    - cp -R ./target/Panini-0.0.1-SNAPSHOT-jar-with-dependencies.jar $CIRCLE_ARTIFACTS
+
+machine:
+  java:
+    version: oraclejdk8
