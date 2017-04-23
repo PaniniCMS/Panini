@@ -29,12 +29,12 @@
         <dependency>
             <groupId>org.jooby</groupId>
             <artifactId>jooby</artifactId>
-            <version>1.0.1</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.jooby</groupId>
             <artifactId>jooby-netty</artifactId>
-            <version>1.0.1</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.mitchellbosecke</groupId>
