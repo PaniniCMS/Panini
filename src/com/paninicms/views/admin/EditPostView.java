@@ -22,16 +22,16 @@ public class EditPostView {
 		try {
 			context.contextVars().put("statusMessage", context.request().session().get("statusMessage").value(null));
 			PebbleTemplate template = Panini.getEngine().getTemplate("admin/editpost.html");
-			
+
 			Document document = Panini.getPostsCollection().find(Filters.eq("_id", new ObjectId(context.arguments()[3]))).first();
-			
+
 			Post post = Panini.getDatastore().get(Post.class, document.get("_id"));
-			
+
 			context.contextVars().put("editingPost", post);
-			
+
 			if (context.request().param("deleteMe").isSet()) {
 				Panini.getDatastore().delete(post);
-				
+
 				try {
 					context.response().redirect(Panini.getWebsiteUrl() + "panini/panel?reason=" + URLEncoder.encode("Post deletado com sucesso!", "UTF-8"));
 					return null;
@@ -45,20 +45,22 @@ public class EditPostView {
 				post.markdownContent(context.request().param("markdown").value());
 				post.postedIn(System.currentTimeMillis());
 				post.title(context.request().param("title").value());
-				
+
 				String slug = Panini.getSlugify().slugify(context.request().param("title").value());
-				
-				int idx = 0;
-				while (Panini.getPostsCollection().find(Filters.eq("slug", slug)).first() != null) {
-					slug = Panini.getSlugify().slugify(context.request().param("title").value()) + idx;
-					idx++;
+
+				if (!post.slug().equals(slug)) {
+					int idx = 0;
+					while (Panini.getPostsCollection().find(Filters.eq("slug", slug)).first() != null) {
+						slug = Panini.getSlugify().slugify(context.request().param("title").value()) + idx;
+						idx++;
+					}
+
+					post.slug(slug);
 				}
-				
-				post.slug(slug);
 				
 				Panini.getDatastore().save(post);
 				context.contextVars().put("statusMessage", "Post alterado com sucesso!");
-				
+
 				try {
 					context.response().redirect(Panini.getWebsiteUrl() + "panini/panel?reason=" + URLEncoder.encode("Post alterado com sucesso!", "UTF-8"));
 					return null;
