@@ -1,5 +1,8 @@
 package com.paninicms.utils.blog;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -31,6 +34,8 @@ public class Post {
 	long postedIn; // Quando o post foi postado
 	
 	String markdownContent; // Conteúdo em formato markdown
+	
+	Map<String, Object> metadata = new HashMap<String, Object>(); 
 	
 	@Transient
 	transient String content; // Conteúdo em formato html
