@@ -154,6 +154,7 @@ public class Panini extends Jooby {
 
 	public static void loadPlugins() {
 		final File file = new File("./plugins");
+		if (!file.exists()) { file.mkdirs(); }
 		for(final File child : file.listFiles()) {
 			System.out.println("Loading " + child.getName() + "... May or may not work!");
 
