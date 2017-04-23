@@ -35,7 +35,9 @@ public class Post {
 	
 	String markdownContent; // Conteúdo em formato markdown
 	
-	Map<String, Object> metadata = new HashMap<String, Object>(); 
+	Map<String, Object> metadata = new HashMap<String, Object>(); // Stored metadata
+	
+	transient Map<String, Object> softMetadata = new HashMap<String, Object>(); // Soft metadata
 	
 	@Transient
 	transient String content; // Conteúdo em formato html

@@ -2,8 +2,9 @@ package com.paninicms.plugin;
 
 import java.net.URLClassLoader;
 
+import com.paninicms.plugin.event.GetPostEvent;
 import com.paninicms.plugin.event.PostRenderEvent;
-import com.paninicms.utils.RenderContext;
+import com.paninicms.plugin.event.PreRenderEvent;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,11 +18,15 @@ public class PaniniPlugin {
 		
 	}
 	
-	public void onPreRender(RenderContext context) {
+	public void onPreRender(PreRenderEvent ev) {
 		
 	}
 	
 	public void onPostRender(PostRenderEvent ev) {
+		
+	}
+	
+	public void onGetPost(GetPostEvent ev) {
 		
 	}
 }

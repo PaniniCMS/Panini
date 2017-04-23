@@ -34,6 +34,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.PluginDescription;
+import com.paninicms.plugin.event.GetPostEvent;
 import com.paninicms.utils.blog.Author;
 import com.paninicms.utils.blog.Post;
 import com.paninicms.views.GlobalHandler;
@@ -93,6 +94,12 @@ public class Panini extends Jooby {
 			posts.add(post);
 		}
 
+		GetPostEvent getPostEvent = new GetPostEvent(posts);
+		for (PaniniPlugin plugin : getPlugins()) {
+			plugin.onGetPost(getPostEvent);
+		}
+		posts = getPostEvent.getLoadedPosts();
+		
 		return posts;
 	}
 	

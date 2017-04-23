@@ -13,6 +13,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.paninicms.Panini;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.event.PostRenderEvent;
+import com.paninicms.plugin.event.PreRenderEvent;
 import com.paninicms.utils.PaniniUtils;
 import com.paninicms.utils.RenderContext;
 import com.paninicms.views.admin.LoginView;
@@ -38,10 +39,12 @@ public class GlobalHandler {
 					.response(res)
 					.arguments(arguments);
 
+			PreRenderEvent preRenderEvent = new PreRenderEvent(context);
 			for (PaniniPlugin plugin : Panini.getPlugins()) {
-				plugin.onPreRender(context);
+				plugin.onPreRender(preRenderEvent);
 			}
-
+			context = preRenderEvent.getRenderContext();
+			
 			Object obj = null;
 			if (arguments.is(0, "panini")) {
 				obj = LoginView.render(context);
