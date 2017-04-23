@@ -71,25 +71,7 @@ public class Panini extends Jooby {
 	private static int port;
 
 	public static List<Post> getAllPosts() {
-		List<Post> posts = new ArrayList<Post>();
-
-		FindIterable<Document> documents = postsCollection.find();
-
-		documents.sort(Sorts.descending("postedIn"));
-		for (Document document : documents) {
-			Post post = (Post) getDatastore().get(Post.class, document.get("_id"));
-
-			HtmlRenderer renderer = HtmlRenderer.builder().build();
-			Parser parser = Parser.builder().build();
-			Node node = parser.parse(post.markdownContent());
-			String content = renderer.render(node);
-
-			post.content(content);
-
-			posts.add(post);
-		}
-
-		return posts;
+		return getAllPosts(new Document());
 	}
 
 	public static List<Post> getAllPosts(Bson filter) {
