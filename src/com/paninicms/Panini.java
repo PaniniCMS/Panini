@@ -2,6 +2,8 @@ package com.paninicms;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -11,6 +13,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
@@ -141,6 +145,22 @@ public class Panini extends Jooby {
 							System.out.println("createauthor username pass");
 						}
 					}
+					if (cmds[0].equals("reload")) {
+						System.out.println("You shouldn't use this in production!");
+						System.out.println("May cause memory leaks!");
+						System.out.println("And it may also explode your computer!");
+						for (PaniniPlugin panini : plugins) {
+							try {
+								panini.getClassLoader().close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							panini.setClassLoader(null);
+						}
+						System.gc();
+						plugins.clear();
+						loadPlugins();
+					}
 				}
 			}
 		};
@@ -156,23 +176,27 @@ public class Panini extends Jooby {
 			System.out.println("Loading " + child.getName() + "... May or may not work!");
 
 			try {
-				// Loading the JAR to the class loader
-				URL url = child.toURI().toURL();
+				loadPlugin(child);
+			} catch (Exception ex) {
+				System.out.println("Error while loading " + child.getName() + "!");
+				ex.printStackTrace();
+			}
+		}
+	}
 
-				URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+	private static void loadPlugin(File file) {
+		PluginDescription description = getDescriptionFromFile(file);
+
+		if (description != null) {
+			try {
+				URL url = file.toURI().toURL();
+
+				URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { url });
 				Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
 				method.setAccessible(true);
 				method.invoke(classLoader, url);
 
-				// Now we are going to read the plugin description from the JAR
-				InputStream is = classLoader.getResourceAsStream("plugin.json");
-
-				String result = new BufferedReader(new InputStreamReader(is))
-						.lines().collect(Collectors.joining("\n"));
-
-				PluginDescription description = getGson().fromJson(result, PluginDescription.class);
-
-				Class<?> clazz = Class.forName(description.getClassPath());
+				Class<?> clazz = Class.forName(description.getClassPath(), true, classLoader);
 
 				PaniniPlugin plugin = (PaniniPlugin) clazz.newInstance();
 				plugin.setClassLoader(classLoader);
@@ -180,11 +204,49 @@ public class Panini extends Jooby {
 				plugin.onEnable();
 
 				System.out.println(description.getPluginName() + " " + description.getVersion() + " loaded sucessfully!");
-			} catch (Exception ex) {
-				System.out.println("Error while loading " + child.getName() + "!");
-				ex.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Invalid plugin description for " + file.getName() + "!");
+		}
+	}
+
+	private static PluginDescription getDescriptionFromFile(File file) {
+		JarFile jar = null;
+		InputStream stream = null;
+
+		try {
+			jar = new JarFile(file);
+			JarEntry entry = jar.getJarEntry("plugin.json");
+
+			if (entry == null) {
+				throw new RuntimeException(new FileNotFoundException("Jar does not contain plugin.json"));
+			}
+
+			stream = jar.getInputStream(entry);
+
+			String result = new BufferedReader(new InputStreamReader(stream))
+					.lines().collect(Collectors.joining("\n"));
+
+			return getGson().fromJson(result, PluginDescription.class);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (jar != null) {
+				try {
+					jar.close();
+				} catch (IOException e) {
+				}
+			}
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+				}
 			}
 		}
+		return null;
 	}
 
 	@Getter
