@@ -18,6 +18,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jooby.Jooby;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -91,6 +92,28 @@ public class Panini extends Jooby {
 		return posts;
 	}
 
+	public static List<Post> getAllPosts(Bson filter) {
+		List<Post> posts = new ArrayList<Post>();
+
+		FindIterable<Document> documents = postsCollection.find(filter);
+		
+		documents.sort(Sorts.descending("postedIn"));
+		for (Document document : documents) {
+			Post post = (Post) getDatastore().get(Post.class, document.get("_id"));
+
+			HtmlRenderer renderer = HtmlRenderer.builder().build();
+			Parser parser = Parser.builder().build();
+			Node node = parser.parse(post.markdownContent());
+			String content = renderer.render(node);
+
+			post.content(content);
+
+			posts.add(post);
+		}
+
+		return posts;
+	}
+	
 	{
 		port(port); // Usar a porta que nós passamos ao iniciar a Panini
 		assets("/**", Paths.get(rootFolderAsString + "static/"));
@@ -100,14 +123,17 @@ public class Panini extends Jooby {
 
 	// Registrar algumas variáveis para usar no Jooby
 	public static void init(String rootPath, String websiteUrl, String websitePort, String mongoDatabase) {
+		rootFolderAsString = rootPath;
+		if (!rootFolderAsString.endsWith(File.separator)) {
+			rootFolderAsString += File.separator;
+		}
 		mongoClient = new MongoClient();
 		database = mongoClient.getDatabase(mongoDatabase);
 		morphia = new Morphia();
 		datastore = morphia.createDatastore(mongoClient, mongoDatabase);
 		authorsCollection = database.getCollection("authors");
 		postsCollection = database.getCollection("posts");
-		rootFolder = new File(rootPath);
-		rootFolderAsString = rootPath;
+		rootFolder = new File(rootFolderAsString);
 		slugify = new Slugify();
 		Panini.websiteUrl = websiteUrl;
 
