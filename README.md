@@ -11,7 +11,7 @@ PaniniCMS
 
 ## So you probably don't want to use it unless if you want to get your hands dirty!
 
-### After all, I made this for my own personal use, but hey! If you want a cool simple & nice blogging CMS in Java, hey! You could use PaniniCMS!
+### After all, I made this for my own personal use, but hey! If you want a cool simple & nice blogging CMS in Java you can use PaniniCMS!
 
 PaniniCMS (or "Panini") is a simple blogging CMS made in Java, using [Jooby](http://jooby.org/) + [MongoDB](https://www.mongodb.com/) + [Pebble Template Engine](http://www.mitchellbosecke.com/pebble/home), PaniniCMS was created due to the lack of a good and **customizable** blogging CMS. (yes, there is a bunch of good blogging CMS like Wordpress, *insert your favourite blogging CMS here*, etc... but none are easy to customize)... also all of them are made in PHP and I don't like PHP.
 
