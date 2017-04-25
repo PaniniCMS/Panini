@@ -5,6 +5,7 @@ import java.net.URLClassLoader;
 import com.paninicms.plugin.event.GetPostsEvent;
 import com.paninicms.plugin.event.PostRenderEvent;
 import com.paninicms.plugin.event.PreRenderEvent;
+import com.paninicms.plugin.event.ReadPostEvent;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +29,9 @@ public class PaniniPlugin {
 	
 	public void onGetPost(GetPostsEvent ev) {
 		
+	}
+
+	public void onReadPostEvent(ReadPostEvent readPostEvent) {
+
 	}
 }
