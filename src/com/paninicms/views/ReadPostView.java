@@ -18,11 +18,12 @@ public class ReadPostView {
 
 			if (!validPosts.isEmpty()) {
 				Post post = validPosts.get(0);
-				ReadPostEvent readPostEvent = new ReadPostEvent(post);
+				ReadPostEvent readPostEvent = new ReadPostEvent(post, context);
 				for (PaniniPlugin plugin : Panini.getPlugins()) {
 					plugin.onReadPostEvent(readPostEvent);
 				}
 				post = readPostEvent.getPost();
+				context = readPostEvent.getContext();
 				context.contextVars().put("post", post);
 				PebbleTemplate template = Panini.getEngine().getTemplate("post.html");
 				
