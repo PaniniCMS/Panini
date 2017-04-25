@@ -35,6 +35,7 @@ import com.mongodb.client.model.Sorts;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.PluginDescription;
 import com.paninicms.plugin.event.GetPostsEvent;
+import com.paninicms.utils.PaniniConfig;
 import com.paninicms.utils.blog.Author;
 import com.paninicms.utils.blog.Post;
 import com.paninicms.views.GlobalHandler;
@@ -111,26 +112,26 @@ public class Panini extends Jooby {
 	}
 
 	// Registrar algumas variáveis para usar no Jooby
-	public static void init(String rootPath, String websiteUrl, String websitePort, String mongoDatabase) {
-		rootFolderAsString = rootPath;
+	public static void init(PaniniConfig config) {
+		rootFolderAsString = config.getFrontendFolder();
 		if (!rootFolderAsString.endsWith(File.separator)) {
 			rootFolderAsString += File.separator;
 		}
 		mongoClient = new MongoClient();
-		database = mongoClient.getDatabase(mongoDatabase);
+		database = mongoClient.getDatabase(config.getMongoDBDatabase());
 		morphia = new Morphia();
-		datastore = morphia.createDatastore(mongoClient, mongoDatabase);
+		datastore = morphia.createDatastore(mongoClient, config.getMongoDBDatabase());
 		authorsCollection = database.getCollection("authors");
 		postsCollection = database.getCollection("posts");
 		rootFolder = new File(rootFolderAsString);
 		slugify = new Slugify();
-		Panini.websiteUrl = websiteUrl;
+		Panini.websiteUrl = config.getWebsiteUrl();
 
 		FileLoader fl = new FileLoader();
 		fl.setPrefix(rootFolder.toString());
 		engine = new PebbleEngine.Builder().cacheActive(false).strictVariables(true).loader(fl).build();
 
-		port = Integer.parseInt(websitePort);
+		port = config.getPort();
 
 		// Load external plugins
 		loadPlugins();
