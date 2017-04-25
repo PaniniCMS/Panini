@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetPostEvent {
+public class GetPostsEvent {
 	private List<Post> loadedPosts;
 }

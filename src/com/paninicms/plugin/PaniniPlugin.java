@@ -2,7 +2,7 @@ package com.paninicms.plugin;
 
 import java.net.URLClassLoader;
 
-import com.paninicms.plugin.event.GetPostEvent;
+import com.paninicms.plugin.event.GetPostsEvent;
 import com.paninicms.plugin.event.PostRenderEvent;
 import com.paninicms.plugin.event.PreRenderEvent;
 
@@ -26,7 +26,7 @@ public class PaniniPlugin {
 		
 	}
 	
-	public void onGetPost(GetPostEvent ev) {
+	public void onGetPost(GetPostsEvent ev) {
 		
 	}
 }
