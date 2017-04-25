@@ -50,6 +50,8 @@ public class GlobalHandler {
 				obj = LoginView.render(context);
 			} else if (arguments.is(0, "posts") && arguments.length >= 2) {
 				obj = ReadPostView.render(context);
+			} else if (arguments.is(0, "pages") && arguments.length >= 2) {
+				obj = ReadPageView.render(context);
 			} else if (arguments.length == 0) {
 				obj = HomeView.render(context);
 			}

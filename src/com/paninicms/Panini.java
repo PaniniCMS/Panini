@@ -34,9 +34,11 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.PluginDescription;
+import com.paninicms.plugin.event.GetPagesEvent;
 import com.paninicms.plugin.event.GetPostsEvent;
 import com.paninicms.utils.PaniniConfig;
 import com.paninicms.utils.blog.Author;
+import com.paninicms.utils.blog.Page;
 import com.paninicms.utils.blog.Post;
 import com.paninicms.views.GlobalHandler;
 import com.vladsch.flexmark.ast.Node;
@@ -65,6 +67,8 @@ public class Panini extends Jooby {
 	private static MongoCollection<Document> authorsCollection;
 	@Getter
 	private static MongoCollection<Document> postsCollection;
+	@Getter
+	private static MongoCollection<Document> pagesCollection;
 	@Getter
 	private static Slugify slugify;
 	@Getter
@@ -104,6 +108,38 @@ public class Panini extends Jooby {
 		return posts;
 	}
 	
+	public static List<Page> getAllPages() {
+		return getAllPages(new Document());
+	}
+
+	public static List<Page> getAllPages(Bson filter) {
+		List<Page> pages = new ArrayList<Page>();
+
+		FindIterable<Document> documents = pagesCollection.find(filter);
+		
+		documents.sort(Sorts.descending("postedIn"));
+		for (Document document : documents) {
+			Page page = (Page) getDatastore().get(Page.class, document.get("_id"));
+
+			HtmlRenderer renderer = HtmlRenderer.builder().build();
+			Parser parser = Parser.builder().build();
+			Node node = parser.parse(page.markdownContent());
+			String content = renderer.render(node);
+
+			page.content(content);
+
+			pages.add(page);
+		}
+
+		GetPagesEvent getPostEvent = new GetPagesEvent(pages);
+		for (PaniniPlugin plugin : getPlugins()) {
+			plugin.onGetPages(getPostEvent);
+		}
+		pages = getPostEvent.getLoadedPages();
+		
+		return pages;
+	}
+	
 	{
 		port(port); // Usar a porta que nós passamos ao iniciar a Panini
 		assets("/**", Paths.get(rootFolderAsString + "static/"));
@@ -123,6 +159,7 @@ public class Panini extends Jooby {
 		datastore = morphia.createDatastore(mongoClient, config.getMongoDBDatabase());
 		authorsCollection = database.getCollection("authors");
 		postsCollection = database.getCollection("posts");
+		pagesCollection = database.getCollection("pages");
 		rootFolder = new File(rootFolderAsString);
 		slugify = new Slugify();
 		Panini.websiteUrl = config.getWebsiteUrl();

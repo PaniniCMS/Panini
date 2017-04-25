@@ -2,9 +2,11 @@ package com.paninicms.plugin;
 
 import java.net.URLClassLoader;
 
+import com.paninicms.plugin.event.GetPagesEvent;
 import com.paninicms.plugin.event.GetPostsEvent;
 import com.paninicms.plugin.event.PostRenderEvent;
 import com.paninicms.plugin.event.PreRenderEvent;
+import com.paninicms.plugin.event.ReadPageEvent;
 import com.paninicms.plugin.event.ReadPostEvent;
 
 import lombok.Getter;
@@ -31,7 +33,15 @@ public class PaniniPlugin {
 		
 	}
 
+	public void onGetPages(GetPagesEvent ev) {
+		
+	}
+	
 	public void onReadPostEvent(ReadPostEvent readPostEvent) {
+
+	}
+	
+	public void onReadPageEvent(ReadPageEvent readPageEvent) {
 
 	}
 }

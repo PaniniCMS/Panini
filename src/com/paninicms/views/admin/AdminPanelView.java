@@ -19,7 +19,14 @@ public class AdminPanelView {
 			if (context.arguments().is(2, "editpost")) {
 				return EditPostView.render(context, author);
 			}
+			if (context.arguments().is(2, "createpage")) {
+				return CreatePageView.render(context, author);
+			}
+			if (context.arguments().is(2, "editpage")) {
+				return EditPageView.render(context, author);
+			}
 			context.contextVars().put("posts", Panini.getAllPosts());
+			context.contextVars().put("pages", Panini.getAllPages());
 			context.contextVars().put("statusMessage", context.request().param("reason").value(null));
 			
 			PebbleTemplate template = Panini.getEngine().getTemplate("admin/panel.html");
