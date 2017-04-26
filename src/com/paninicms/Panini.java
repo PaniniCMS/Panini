@@ -100,13 +100,13 @@ public class Panini extends Jooby {
 			posts.add(post);
 		}
 
-		GetPostsEvent getPostEvent = new GetPostsEvent(posts);
+		GetPostsEvent getPostsEvent = new GetPostsEvent(posts);
 		for (PaniniPlugin plugin : getPlugins()) {
 			for (Listener listener : plugin.getListeners()) {
-				PaniniPlugin.executeEvent(listener, getPostEvent);
+				PaniniPlugin.executeEvent(listener, getPostsEvent);
 			}
 		}
-		posts = getPostEvent.getLoadedPosts();
+		posts = getPostsEvent.getLoadedPosts();
 
 		return posts;
 	}
