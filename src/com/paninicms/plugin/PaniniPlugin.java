@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaniniPlugin {
+public class PaniniPlugin extends ListenerAdapter {
 	URLClassLoader classLoader;
 	private List<ListenerAdapter> listenerAdapters = new ArrayList<ListenerAdapter>();
 	
