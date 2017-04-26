@@ -208,6 +208,7 @@ public class Panini extends Jooby {
 						System.out.println("May cause memory leaks!");
 						System.out.println("And it may also explode your computer!");
 						for (PaniniPlugin panini : plugins) {
+							panini.getListenerAdapters().clear();
 							try {
 								panini.getClassLoader().close();
 							} catch (IOException e) {
