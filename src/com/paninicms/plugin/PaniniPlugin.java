@@ -1,5 +1,6 @@
 package com.paninicms.plugin;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
@@ -29,8 +30,10 @@ public class PaniniPlugin {
 	public static void executeEvent(Listener listener, Object event) {
 		Class clazz = listener.getClass();
 		
-		for (Method method : clazz.getMethods()) {
+		for (Method method : clazz.getDeclaredMethods()) {
+			System.out.println("Method: " + method.getName());
 			if (method.isAnnotationPresent(SubscribeEvent.class)) {
+				System.out.println("Yes, it is present!");
 				if (method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == event.getClass()) {
 					try {
 						method.invoke(listener, event);
