@@ -101,7 +101,7 @@ public class Panini extends Jooby {
 
 		GetPostsEvent getPostEvent = new GetPostsEvent(posts);
 		for (PaniniPlugin plugin : getPlugins()) {
-			plugin.onGetPost(getPostEvent);
+			plugin.onBlogPostsLoaded(getPostEvent);
 		}
 		posts = getPostEvent.getLoadedPosts();
 		
@@ -133,7 +133,7 @@ public class Panini extends Jooby {
 
 		GetPagesEvent getPostEvent = new GetPagesEvent(pages);
 		for (PaniniPlugin plugin : getPlugins()) {
-			plugin.onGetPages(getPostEvent);
+			plugin.onBlogPagesLoaded(getPostEvent);
 		}
 		pages = getPostEvent.getLoadedPages();
 		

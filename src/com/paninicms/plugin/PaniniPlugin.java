@@ -29,11 +29,11 @@ public class PaniniPlugin {
 		
 	}
 	
-	public void onGetPost(GetPostsEvent ev) {
+	public void onBlogPostsLoaded(GetPostsEvent ev) {
 		
 	}
 
-	public void onGetPages(GetPagesEvent ev) {
+	public void onBlogPagesLoaded(GetPagesEvent ev) {
 		
 	}
 	
