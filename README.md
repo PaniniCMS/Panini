@@ -1,7 +1,7 @@
 PaniniCMS
 -------------
 <p align="center">
-<img src="https://vignette3.wikia.nocookie.net/chowder/images/5/55/PaniniCookieChowder.png"></img>
+<img src="http://i.imgur.com/yA5pzQh.png"></img>
 <p align="center">
 <a href="https://circleci.com/gh/PaniniCMS/Panini"><img src="https://circleci.com/gh/PaniniCMS/Panini.svg?style=shield"></img></a>
 </p>
