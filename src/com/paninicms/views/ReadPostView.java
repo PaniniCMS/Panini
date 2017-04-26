@@ -7,7 +7,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.paninicms.Panini;
 import com.paninicms.plugin.PaniniPlugin;
-import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.Listener;
 import com.paninicms.plugin.event.blog.ReadPostEvent;
 import com.paninicms.utils.RenderContext;
 import com.paninicms.utils.blog.Post;
@@ -21,8 +21,8 @@ public class ReadPostView {
 				Post post = validPosts.get(0);
 				ReadPostEvent readPostEvent = new ReadPostEvent(post, context);
 				for (PaniniPlugin plugin : Panini.getPlugins()) {
-					for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
-						listenerAdapter.onReadPostEvent(readPostEvent);
+					for (Listener listener : plugin.getListeners()) {
+						PaniniPlugin.executeEvent(listener, readPostEvent);
 					}
 				}
 				post = readPostEvent.getPost();

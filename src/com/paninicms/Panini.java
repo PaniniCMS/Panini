@@ -34,7 +34,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.PluginDescription;
-import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.Listener;
 import com.paninicms.plugin.event.blog.GetPagesEvent;
 import com.paninicms.plugin.event.blog.GetPostsEvent;
 import com.paninicms.utils.PaniniConfig;
@@ -102,8 +102,8 @@ public class Panini extends Jooby {
 
 		GetPostsEvent getPostEvent = new GetPostsEvent(posts);
 		for (PaniniPlugin plugin : getPlugins()) {
-			for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
-				listenerAdapter.onBlogPostsLoaded(getPostEvent);
+			for (Listener listener : plugin.getListeners()) {
+				PaniniPlugin.executeEvent(listener, getPostEvent);
 			}
 		}
 		posts = getPostEvent.getLoadedPosts();
@@ -136,8 +136,8 @@ public class Panini extends Jooby {
 
 		GetPagesEvent getPagesEvent = new GetPagesEvent(pages);
 		for (PaniniPlugin plugin : getPlugins()) {
-			for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
-				listenerAdapter.onBlogPagesLoaded(getPagesEvent);
+			for (Listener listener : plugin.getListeners()) {
+				PaniniPlugin.executeEvent(listener, getPagesEvent);
 			}
 		}
 		pages = getPagesEvent.getLoadedPages();
@@ -208,7 +208,7 @@ public class Panini extends Jooby {
 						System.out.println("May cause memory leaks!");
 						System.out.println("And it may also explode your computer!");
 						for (PaniniPlugin panini : plugins) {
-							panini.getListenerAdapters().clear();
+							panini.getListeners().clear();
 							try {
 								panini.getClassLoader().close();
 							} catch (IOException e) {

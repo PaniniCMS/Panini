@@ -1,25 +1,44 @@
 package com.paninicms.plugin;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.Listener;
+import com.paninicms.plugin.event.SubscribeEvent;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PaniniPlugin extends ListenerAdapter {
+public class PaniniPlugin {
 	URLClassLoader classLoader;
-	private List<ListenerAdapter> listenerAdapters = new ArrayList<ListenerAdapter>();
+	private List<Listener> listeners = new ArrayList<Listener>();
 	
 	public void onEnable() {
 		
 	}
 	
-	public void registerListener(ListenerAdapter listenerAdapter) {
-		listenerAdapters.add(listenerAdapter);
+	public void registerListener(Listener listener) {
+		listeners.add(listener);
+	}
+	
+	public static void executeEvent(Listener listener, Object event) {
+		Class clazz = listener.getClass();
+		
+		for (Method method : clazz.getMethods()) {
+			if (method.isAnnotationPresent(SubscribeEvent.class)) {
+				if (method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == event.getClass()) {
+					try {
+						method.invoke(listener, event);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }

@@ -7,7 +7,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.paninicms.Panini;
 import com.paninicms.plugin.PaniniPlugin;
-import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.Listener;
 import com.paninicms.plugin.event.blog.ReadPageEvent;
 import com.paninicms.utils.RenderContext;
 import com.paninicms.utils.blog.Page;
@@ -22,8 +22,8 @@ public class ReadPageView {
 
 				ReadPageEvent readPostEvent = new ReadPageEvent(page, context);
 				for (PaniniPlugin plugin : Panini.getPlugins()) {
-					for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
-						listenerAdapter.onReadPageEvent(readPostEvent);
+					for (Listener listener : plugin.getListeners()) {
+						PaniniPlugin.executeEvent(listener, readPostEvent);
 					}
 				}
 				page = readPostEvent.getPage();

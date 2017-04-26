@@ -12,7 +12,7 @@ import org.jooby.Response;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.paninicms.Panini;
 import com.paninicms.plugin.PaniniPlugin;
-import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.Listener;
 import com.paninicms.plugin.event.blog.PostRenderEvent;
 import com.paninicms.plugin.event.blog.PreRenderEvent;
 import com.paninicms.utils.PaniniUtils;
@@ -42,8 +42,8 @@ public class GlobalHandler {
 
 			PreRenderEvent preRenderEvent = new PreRenderEvent(context);
 			for (PaniniPlugin plugin : Panini.getPlugins()) {
-				for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
-					listenerAdapter.onPreRender(preRenderEvent);
+				for (Listener listener : plugin.getListeners()) {
+					PaniniPlugin.executeEvent(listener, preRenderEvent);
 				}
 			}
 			context = preRenderEvent.getRenderContext();
@@ -61,8 +61,8 @@ public class GlobalHandler {
 
 			PostRenderEvent postRenderEvent = new PostRenderEvent(context, obj);
 			for (PaniniPlugin plugin : Panini.getPlugins()) {
-				for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
-					listenerAdapter.onPostRender(postRenderEvent);
+				for (Listener listener : plugin.getListeners()) {
+					PaniniPlugin.executeEvent(listener, postRenderEvent);
 				}
 			}
 			context = postRenderEvent.getRenderContext();
