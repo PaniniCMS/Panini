@@ -12,8 +12,9 @@ import org.jooby.Response;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.paninicms.Panini;
 import com.paninicms.plugin.PaniniPlugin;
-import com.paninicms.plugin.event.PostRenderEvent;
-import com.paninicms.plugin.event.PreRenderEvent;
+import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.blog.PostRenderEvent;
+import com.paninicms.plugin.event.blog.PreRenderEvent;
 import com.paninicms.utils.PaniniUtils;
 import com.paninicms.utils.RenderContext;
 import com.paninicms.views.admin.LoginView;
@@ -41,7 +42,9 @@ public class GlobalHandler {
 
 			PreRenderEvent preRenderEvent = new PreRenderEvent(context);
 			for (PaniniPlugin plugin : Panini.getPlugins()) {
-				plugin.onPreRender(preRenderEvent);
+				for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
+					listenerAdapter.onPreRender(preRenderEvent);
+				}
 			}
 			context = preRenderEvent.getRenderContext();
 			
@@ -58,7 +61,9 @@ public class GlobalHandler {
 
 			PostRenderEvent postRenderEvent = new PostRenderEvent(context, obj);
 			for (PaniniPlugin plugin : Panini.getPlugins()) {
-				plugin.onPostRender(postRenderEvent);
+				for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
+					listenerAdapter.onPostRender(postRenderEvent);
+				}
 			}
 			context = postRenderEvent.getRenderContext();
 			obj = postRenderEvent.getTemplate();

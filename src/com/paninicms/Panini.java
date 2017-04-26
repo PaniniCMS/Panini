@@ -34,8 +34,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.PluginDescription;
-import com.paninicms.plugin.event.GetPagesEvent;
-import com.paninicms.plugin.event.GetPostsEvent;
+import com.paninicms.plugin.event.ListenerAdapter;
+import com.paninicms.plugin.event.blog.GetPagesEvent;
+import com.paninicms.plugin.event.blog.GetPostsEvent;
 import com.paninicms.utils.PaniniConfig;
 import com.paninicms.utils.blog.Author;
 import com.paninicms.utils.blog.Page;
@@ -84,7 +85,7 @@ public class Panini extends Jooby {
 		List<Post> posts = new ArrayList<Post>();
 
 		FindIterable<Document> documents = postsCollection.find(filter);
-		
+
 		documents.sort(Sorts.descending("postedIn"));
 		for (Document document : documents) {
 			Post post = (Post) getDatastore().get(Post.class, document.get("_id"));
@@ -101,13 +102,15 @@ public class Panini extends Jooby {
 
 		GetPostsEvent getPostEvent = new GetPostsEvent(posts);
 		for (PaniniPlugin plugin : getPlugins()) {
-			plugin.onBlogPostsLoaded(getPostEvent);
+			for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
+				listenerAdapter.onBlogPostsLoaded(getPostEvent);
+			}
 		}
 		posts = getPostEvent.getLoadedPosts();
-		
+
 		return posts;
 	}
-	
+
 	public static List<Page> getAllPages() {
 		return getAllPages(new Document());
 	}
@@ -116,7 +119,7 @@ public class Panini extends Jooby {
 		List<Page> pages = new ArrayList<Page>();
 
 		FindIterable<Document> documents = pagesCollection.find(filter);
-		
+
 		documents.sort(Sorts.descending("postedIn"));
 		for (Document document : documents) {
 			Page page = (Page) getDatastore().get(Page.class, document.get("_id"));
@@ -131,15 +134,17 @@ public class Panini extends Jooby {
 			pages.add(page);
 		}
 
-		GetPagesEvent getPostEvent = new GetPagesEvent(pages);
+		GetPagesEvent getPagesEvent = new GetPagesEvent(pages);
 		for (PaniniPlugin plugin : getPlugins()) {
-			plugin.onBlogPagesLoaded(getPostEvent);
+			for (ListenerAdapter listenerAdapter : plugin.getListenerAdapters()) {
+				listenerAdapter.onBlogPagesLoaded(getPagesEvent);
+			}
 		}
-		pages = getPostEvent.getLoadedPages();
-		
+		pages = getPagesEvent.getLoadedPages();
+
 		return pages;
 	}
-	
+
 	{
 		port(port); // Usar a porta que nós passamos ao iniciar a Panini
 		assets("/**", Paths.get(rootFolderAsString + "static/"));

@@ -1,4 +1,4 @@
-package com.paninicms.plugin.event;
+package com.paninicms.plugin.event.blog;
 
 import com.paninicms.utils.RenderContext;
 
