@@ -1,6 +1,7 @@
 package com.paninicms.plugin.event.blog;
 
-import com.paninicms.utils.RenderContext;
+import java.util.List;
+
 import com.paninicms.utils.blog.Post;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ReadPostEvent {
-	private Post post;
-	private RenderContext context;
+public class GetBlogPostsEvent {
+	private List<Post> loadedPosts;
 }

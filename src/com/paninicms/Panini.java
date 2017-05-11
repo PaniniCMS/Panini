@@ -35,8 +35,8 @@ import com.mongodb.client.model.Sorts;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.PluginDescription;
 import com.paninicms.plugin.event.Listener;
-import com.paninicms.plugin.event.blog.GetPagesEvent;
-import com.paninicms.plugin.event.blog.GetPostsEvent;
+import com.paninicms.plugin.event.blog.GetBlogPagesEvent;
+import com.paninicms.plugin.event.blog.GetBlogPostsEvent;
 import com.paninicms.utils.PaniniConfig;
 import com.paninicms.utils.blog.Author;
 import com.paninicms.utils.blog.Page;
@@ -100,7 +100,7 @@ public class Panini extends Jooby {
 			posts.add(post);
 		}
 
-		GetPostsEvent getPostsEvent = new GetPostsEvent(posts);
+		GetBlogPostsEvent getPostsEvent = new GetBlogPostsEvent(posts);
 		for (PaniniPlugin plugin : getPlugins()) {
 			for (Listener listener : plugin.getListeners()) {
 				PaniniPlugin.executeEvent(listener, getPostsEvent);
@@ -134,7 +134,7 @@ public class Panini extends Jooby {
 			pages.add(page);
 		}
 
-		GetPagesEvent getPagesEvent = new GetPagesEvent(pages);
+		GetBlogPagesEvent getPagesEvent = new GetBlogPagesEvent(pages);
 		for (PaniniPlugin plugin : getPlugins()) {
 			for (Listener listener : plugin.getListeners()) {
 				PaniniPlugin.executeEvent(listener, getPagesEvent);

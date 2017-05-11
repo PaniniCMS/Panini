@@ -8,7 +8,7 @@ import com.mongodb.client.model.Filters;
 import com.paninicms.Panini;
 import com.paninicms.plugin.PaniniPlugin;
 import com.paninicms.plugin.event.Listener;
-import com.paninicms.plugin.event.blog.ReadPostEvent;
+import com.paninicms.plugin.event.blog.ReadBlogPostEvent;
 import com.paninicms.utils.RenderContext;
 import com.paninicms.utils.blog.Post;
 
@@ -19,7 +19,7 @@ public class ReadPostView {
 
 			if (!validPosts.isEmpty()) {
 				Post post = validPosts.get(0);
-				ReadPostEvent readPostEvent = new ReadPostEvent(post, context);
+				ReadBlogPostEvent readPostEvent = new ReadBlogPostEvent(post, context);
 				for (PaniniPlugin plugin : Panini.getPlugins()) {
 					for (Listener listener : plugin.getListeners()) {
 						PaniniPlugin.executeEvent(listener, readPostEvent);
